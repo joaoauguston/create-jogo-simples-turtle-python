@@ -1,0 +1,136 @@
+import turtle            #primeiro passo importar o módulo turtle
+import random
+
+#criar a janela
+sc = turtle.Screen()              #chamei essa variavel sc que mais fácil de entender, chamei a biblioteca turtle junto com a função Screen que siginifica t   ela.
+sc.title('Trabalho individual')   #aqui eu fiz com oque o titulo do meu progama fosse trabalho individual.
+sc.setup(width= 600, height= 600) #Isso é a configuração da tela, ou seja largura e altura da mesma
+sc.bgcolor('white')               #aqui ja vou colocar a cor de fundo da minha janela
+
+
+#criaação da tartaruga
+tur = turtle.Turtle()       # chamando o modulo turtle
+tur.shape('turtle')         #aqui vai o objeto a do nosso joguinho ou seja aqui e a tartaruga
+tur.color('green')          # isso e a cor do objeto
+tur.shapesize(1)            #aqui é o tamanho da nossa tartaruga
+tur.penup()                 #Aqui essa linha usamos para não deixar uma linha ou seja 'tirar a caneta' quando precionamos a tecla de andar
+
+#criação da borda
+borda = turtle.Turtle()
+borda.penup()                 
+borda.setposition(-255, 255)            #aqui e a posição do nosso segundo quadrado
+borda.pendown()
+borda.hideturtle()                      #isso aqui é para tirar a seta do papel
+borda.speed(0)
+borda.color('black', 'turquoise')       #aqui é a cor da borda, e do preenchimento
+borda.begin_fill()
+borda.pensize(4)               
+for i in range(4):
+    borda.forward(510)                #O tamanho do nosso quadrado
+    borda.right(90)                   #o angulo 90 graus, para formar o quadrado
+borda.end_fill()                      #Finalizar nossa forma quadrada
+
+#criar fruta
+maça = turtle.Turtle()
+maça.shape('circle')
+maça.shapesize(0.75)
+maça.color('red')
+maça.penup()
+maça.speed(0)
+
+
+
+#criar veneno
+veneno = turtle.Turtle()
+veneno.shape('circle')
+veneno.color('purple')
+veneno.shapesize(0.75)
+veneno.penup()
+veneno.speed(0)
+
+#criar pontos
+pontos = 0
+# mostrar os pontos do player
+placar = turtle.Turtle()
+placar.goto(0, 0)                          #redirecionar a váriavel placar
+placar.pensize(7)
+placar.penup()
+placar.pendown                              #colocar o placar na tela 
+placar.hideturtle()                         #tirar a seta do papel
+placar.setposition(-205, 205)
+
+def pontos_f():                             #criar função pontos
+    placar_write = 'Pontos: %d' % pontos    #criamos uma variavel para receber o numéro de pontos
+    placar.write(placar_write)              #Mandar escrever na tela oque existe na variavel placar write
+
+def apagar_p():                              #criar a função apagar
+    placar.undo()                            #para apagar e escrever denovo
+    placar.setposition(-205, 205)            #posição dos pontos
+
+#criar vidas
+vida = 3
+# mostrar as vidas do player
+vida1 = turtle.Turtle()
+vida1.goto(0, 0)
+vida1.pensize(3)
+vida1.penup()
+vida1.hideturtle()
+vida1.setposition(-190, 205)
+
+def vida_t():
+    life_write = 'Vidas: %d' % vida
+    vida1.write(life_write)
+
+def apaga_v():
+    vida1.undo()
+    vida1.setposition(150, 205)
+
+
+#funções
+def tecup():                                                                            #Criamos uma função com a variável movup 'mov para ficar mais perto de movimento'
+    tur.forward(13)                                                                     #Dentro dessa função faz com oque nossa tar vai andar para frente 13 pixel
+    if tur.xcor() > 255 or tur.xcor() < -255 or tur.ycor() > 255 or tur.ycor() < -255:  #aqui criamos a colizão do limite de tela de acordo com nossa borda
+        tur.forward(-13)
+
+def tecleft():
+    tur.left(10)
+
+def tecright():
+    tur.right(10)
+
+def tecdown():
+    tur.back(13)
+    if tur.xcor() > 255 or tur.xcor() < -255 or tur.ycor() > 255 or tur.ycor() < -255:
+        tur.forward(13)
+
+#interpretações
+sc.listen()
+sc.onkeypress(tecup, 'Up')         #aqui enquanto você apertar a tecla UP vai acionar a função tecup
+sc.onkeypress(tecleft, 'Left')     #aqui enquanto você apertar a tecla Left vai acionar a função tecleft
+sc.onkeypress(tecright, 'Right')   #aqui enquanto você apertar a tecla Right vai acionar a função tecright
+sc.onkeypress(tecdown, 'Down')     #aqui enquanto você apertar a tecla Down vai acionar a função tecdown
+
+while True:
+    sc.update()
+    if tur.distance(maça)<20:
+        x = random.randint(-235, 235)
+        y = random.randint(-235, 235)
+        maça.goto(x, y)
+        #chamar as funções
+        apagar_p()    
+        pontos_f()
+        #para cada maça que comer somar um ponto
+        pontos = pontos + 100
+
+    if tur.distance(veneno)<20:
+        x = random.randint(-235, 235)
+        y = random.randint(-235, 235)
+        veneno.goto(x, y)
+        #chamar as funções
+        apaga_v()
+        vida_t()
+        #subtrair a cada veneno que voce comer
+        vida = vida - 1
+        #Quando comer 3 venenos fechar a tela pois o veneno diminui as vidas
+        if vida == -1:
+            break
